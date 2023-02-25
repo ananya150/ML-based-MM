@@ -6,6 +6,7 @@ mongo_client = os.getenv('MONGO_CLIENT')
 
 from database.mongo import Mongo
 from database.webs import get_orderbook
+from database.features import getOrderBookPressure,getWeightedMidpoint
 import time
 import logging
 
@@ -31,12 +32,9 @@ def format_data(bids , asks , N) -> dict:
         tot_bid_size += float(bids[i][1])
         tot_ask_size += float(asks[i][1])
 
-    # imbalance = getImbalance(bids , asks)
-    # orderbook_pressure = get_orderbookPressure(bids , asks)
-    # weighted_midpoint = get_weightedMidPoint(bids , asks)
-    imbalance = 0
-    orderbook_pressure = 0
-    weighted_midpoint = 0
+
+    imbalance , weighted_midpoint = getWeightedMidpoint(bids , asks , N)
+    orderbook_pressure = getOrderBookPressure(bids , asks , N)
 
     obj = {
         "timestamp": timestamp,
@@ -67,7 +65,7 @@ if __name__ == "__main__":
         obData = get_orderbook(5000)
         print("Data Fetched")
         obj = format_data(obData["bids"] , obData["asks"] , 5000)
-        print("Data Formatted")
+        print("Data Formatted" , obj)
         database.appendMongo(obj)
         end = time.time()
         print("Latency is, " , (end-start)*1000 , " ms")

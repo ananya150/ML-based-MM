@@ -47,9 +47,9 @@ class Mongo():
             "tot_bidSize": str(obj["tot_bidSize"]),
             "tot_askSize": str(obj["tot_askSize"]),
 
-            "imbalance": str(obj["imbalance"]),
-            "orderbook_pressure": str(obj["orderbook_pressure"]),
-            "weighted_midpoint": str(obj["weighted_midpoint"])
+            "imbalance": (obj["imbalance"]).tolist(),
+            "orderbook_pressure": (obj["orderbook_pressure"]).tolist(),
+            "weighted_midpoint": (obj["weighted_midpoint"]).tolist()
         }
         resp = self.coll.insert_one(dict)
         return 0
