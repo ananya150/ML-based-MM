@@ -13,7 +13,7 @@ class Mongo():
     """
         Connect to MongoDb
     """
-    def __init__(self , mgClient) -> None:
+    def __init__(self , mgClient , clear_data) -> None:
 
         try:
             self.client = MongoClient(mgClient)
@@ -21,6 +21,10 @@ class Mongo():
             self.db = self.client["obdb"]
             self.coll = self.db["orderbook"]
             self.connection = True
+
+            if clear_data:
+                print("Clearing Previous Data")
+                self.coll.delete_many({})
 
         except:
             logger.debug("Error in connecting to mongodb")
@@ -33,18 +37,18 @@ class Mongo():
     def appendMongo(self , obj): 
 
         dict = {
-            "timestamp": (obj.timestamp),
+            "timestamp": (obj["timestamp"]),
 
-            "top_bid": str(obj.top_bid),
-            "top_ask": str(obj.top_ask),
-            "mid_point": str(obj.mid_point),
+            "top_bid": str(obj["top_bid"]),
+            "top_ask": str(obj["top_ask"]),
+            "mid_point": str(obj["mid_point"]),
 
-            "tot_bidSize": str(obj.tot_bidSize),
-            "tot_askSize": str(obj.tot_askSize),
+            "tot_bidSize": str(obj["tot_bidSize"]),
+            "tot_askSize": str(obj["tot_askSize"]),
 
-            "imbalance": str(obj.imbalance),
-            "orderbook_pressure": str(obj.pressure),
-            "weighted_midpoint": str(obj.weighted_midpoint)
+            "imbalance": str(obj["imbalance"]),
+            "orderbook_pressure": str(obj["orderbook_pressure"]),
+            "weighted_midpoint": str(obj["weighted_midpoint"])
         }
         resp = self.coll.insert_one(dict)
         logger.info("Response added" , resp)
@@ -58,6 +62,4 @@ class Mongo():
 
         resp =  self.coll.find({"timestamp": {"$gt": stamp} })
         return resp
-
-    
 
