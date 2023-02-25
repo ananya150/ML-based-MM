@@ -1,5 +1,6 @@
 import logging
 from pymongo import MongoClient
+import json
 
 logging.basicConfig(filename="newfile.log",
                     format='%(asctime)s %(message)s',
@@ -17,7 +18,7 @@ class Mongo():
 
         try:
             self.client = MongoClient(mgClient)
-            logger.info("Connected to mongodb")
+            print("Connected to mongodb")
             self.db = self.client["obdb"]
             self.coll = self.db["orderbook"]
             self.connection = True
@@ -27,7 +28,7 @@ class Mongo():
                 self.coll.delete_many({})
 
         except:
-            logger.debug("Error in connecting to mongodb")
+            print("Error in connecting to mongodb")
             self.connection = False
 
 
@@ -51,7 +52,6 @@ class Mongo():
             "weighted_midpoint": str(obj["weighted_midpoint"])
         }
         resp = self.coll.insert_one(dict)
-        logger.info("Response added" , resp)
         return 0
 
 

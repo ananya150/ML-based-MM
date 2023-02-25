@@ -4,8 +4,8 @@ from dotenv import load_dotenv
 load_dotenv()
 mongo_client = os.getenv('MONGO_CLIENT')
 
-from mongo import Mongo
-from webs import get_orderbook
+from database.mongo import Mongo
+from database.webs import get_orderbook
 import time
 import logging
 
@@ -65,9 +65,9 @@ if __name__ == "__main__":
     while True:
         start = time.time()
         obData = get_orderbook(5000)
-        logger.info("Data Fetched")
+        print("Data Fetched")
         obj = format_data(obData["bids"] , obData["asks"] , 5000)
-        logger.info("Data Formatted")
+        print("Data Formatted")
         database.appendMongo(obj)
         end = time.time()
         print("Latency is, " , (end-start)*1000 , " ms")

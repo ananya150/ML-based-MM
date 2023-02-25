@@ -1,0 +1,9 @@
+version: "3"
+services:
+  server:
+    build: './src/database'
+    ports:
+      - 4337:4337
+    restart: on-failure
+    environment:
+      MONGO_CLIENT: "mongodb://host.docker.internal:27017"
