@@ -65,7 +65,7 @@ if __name__ == "__main__":
         obData = get_orderbook(5000)
         print("Data Fetched")
         obj = format_data(obData["bids"] , obData["asks"] , 5000)
-        print("Data Formatted" , obj)
+        print("Data Formatted" )
         database.appendMongo(obj)
         end = time.time()
         print("Latency is, " , (end-start)*1000 , " ms")
